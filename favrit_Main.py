@@ -49,13 +49,19 @@ def process_file(file_path):
             row_index += 1
         
         # Find the row index where "25%" is located in column 1 (A)
-        row_index_25 = df[df.iloc[:, 0] == '25%'].index[0]
-        value_25 = df.iloc[row_index_25, target_column_index]
+        if '25%' in df.iloc[:, 0].values:
+            row_index_25 = df[df.iloc[:, 0] == '25%'].index[0]
+            value_25 = df.iloc[row_index_25, target_column_index]
+        else:
+            value_25 = 0  # or pd.NA if you prefer to use NaN
         
         # Find the row index where "15%" is located in column 1 (A)
-        row_index_15 = df[df.iloc[:, 0] == '15%'].index[0]
-        value_15 = df.iloc[row_index_15, target_column_index]
-
+        if '15%' in df.iloc[:, 0].values:
+            row_index_15 = df[df.iloc[:, 0] == '15%'].index[0]
+            value_15 = df.iloc[row_index_15, target_column_index]
+        else:
+            value_15 = 0  # or pd.NA if you prefer to use NaN
+        
         # Find the row index where "Betalingsformidling" is located in column 1 (A)
         row_index_betalingsformidling = df[df.iloc[:, 0] == 'Betalingsformidling'].index[0]
         
@@ -136,7 +142,7 @@ if input_files:
         for account in ['30012000', '3008', '3018', '5991', '7770', 'Kredittbalanse', '30011000', '30010000']:
             amount = row[account]
             
-            # Exclude rows where amount is zero or negative, and exclude 'Kredittbalanse' if amount is NaN eller 0
+            # Exclude rows where amount is zero or negative, and exclude 'Kredittbalanse' if amount is NaN or 0
             if (amount > 0 and account != 'Kredittbalanse') or (account == 'Kredittbalanse' and pd.notna(amount) and amount != 0):
                 additional_text = ""
                 if account == 'Kredittbalanse':
